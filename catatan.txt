@@ -1,0 +1,25 @@
+Materi yang dipelajari di php framework:
+- Tutorial Dasar:
+    > Instalasi project laravel
+    > Mengenal struktur folder dan file
+    > Mengenal .env (lingkungan variabel yang penting di laravel)
+    > Migrate awal
+    > Menjalankan project laravel
+    > Mengenal sedikit tentang routing
+
+- Mengenal lebih jauh tentang routing, url
+- Mengenal tentang controller dan view
+- Belajar database:
+    > Konfigurasi database
+    > Create table lewat migration
+    > Status tabel -> php artisan migrate:status
+    > Migrasi database
+    > Artisan migrate
+    > Artisan migrate rollback
+    > Migrate fresh
+    > Update table (kolom) mengngunakan migration
+
+- Belajar seeder dan factory
+    > Membuat seeder 
+    > Menjalankan seeder 
+    > Membuat seeder menggunakan factory
