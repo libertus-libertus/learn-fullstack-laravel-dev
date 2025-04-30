@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::resource('blog', BlogController::class);
