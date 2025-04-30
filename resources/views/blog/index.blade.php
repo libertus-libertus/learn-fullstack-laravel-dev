@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Belajar Fundamental Laravel</title>
+    <title>Halaman Blog</title>
     {{-- CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
@@ -13,8 +13,16 @@
         <div class="table-responsive my-3">
             <h1 class="text-center mb-5">Blog Lists</h1>
 
+            <a href="{{ route('blog.create') }}" class="btn btn-primary btn-sm mb-3">Add New Post</a>
+
+            @if (Session::has("success"))
+                <p class="alert alert-success">{{ Session::get("success") }}</p>
+            @endif
+
             <!-- Fitur Pencarian -->
             <form action="" method="get">
+                @csrf
+                
                 <div class="input-group mb-3">
                     <input type="text" name="cari" class="form-control" placeholder="Search by title" aria-label="Search title" aria-describedby="button" value="{{ $cari }}">
                     <button class="btn btn-secondary" type="submit" id="button">Search</button>
@@ -27,7 +35,6 @@
                         <th>No.</th>
                         <th>Judul</th>
                         <th>Slug</th>
-                        <th>Deskripsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +45,6 @@
                         </td>
                         <td>{{ $item->title }}</td>
                         <td>{{ $item->slug }}</td>
-                        <td>{{ $item->description }}</td> 
                     </tr>
                     @empty
                     <tr>
