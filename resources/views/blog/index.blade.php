@@ -35,6 +35,7 @@
                         <th>No.</th>
                         <th>Judul</th>
                         <th>Slug</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +46,20 @@
                         </td>
                         <td>{{ $item->title }}</td>
                         <td>{{ $item->slug }}</td>
+                        <td>
+                            <a 
+                                href="{{ route('blog.show', $item->id) }}" 
+                                class="btn btn-info btn-sm">Detail</a>
+                            <a 
+                                href="{{ route('blog.edit', $item->id) }}" 
+                                class="btn btn-info btn-sm">Update</a>
+                            <form onclick="return confirm('Anda yakin ingin menghapus data ini?')" action="{{ route('blog.destroy', $item->id) }}" method="post">
+                                @csrf
+                                @method('delete')
+
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                     @empty
                     <tr>
