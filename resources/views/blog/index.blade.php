@@ -50,15 +50,20 @@
                             <a 
                                 href="{{ route('blog.show', $item->id) }}" 
                                 class="btn btn-info btn-sm">Detail</a>
-                            <a 
-                                href="{{ route('blog.edit', $item->id) }}" 
-                                class="btn btn-info btn-sm">Update</a>
-                            <form onclick="return confirm('Anda yakin ingin menghapus data ini?')" action="{{ route('blog.destroy', $item->id) }}" method="post">
-                                @csrf
-                                @method('delete')
-
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
+                            @if (!$item->trashed())
+                                <a 
+                                    href="{{ route('blog.edit', $item->id) }}" 
+                                    class="btn btn-info btn-sm">Update</a>
+                                <form onclick="return confirm('Anda yakin ingin menghapus data ini?')" action="{{ route('blog.destroy', $item->id) }}" method="post" style="display:inline-block;">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            @else
+                                <a
+                                    href="{{ route('blog.restore', $item->id) }}" 
+                                    class="btn btn-success btn-sm">Restore</a>
+                            @endif
                         </td>
                     </tr>
                     @empty

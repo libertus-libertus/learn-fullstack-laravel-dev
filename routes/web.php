@@ -17,3 +17,4 @@ Route::get('/', function () {
  * DESTROY
 */ 
 Route::resource('blog', BlogController::class);
+Route::get('blog/{blog}/restore', [BlogController::class, 'restore'])->name('blog.restore');
