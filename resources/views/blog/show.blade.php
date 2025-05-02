@@ -26,6 +26,26 @@
                 </div>
             </div>
         </div>
+        <div class="mt-3">
+            <h5>Comments:</h5>
+            <form action="{{ route("comment.store", $blog->id) }}" method="post">
+                @csrf
+                <textarea class="form-control" name="comment_text" cols="30" rows="5" placeholder="Silahkan tinggal komentar Anda disini" style="resize: none"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm mt-2">Submit</button>
+            </form>
+        </div>
+
+        {{-- show-komentar --}}
+        <div class="mt-3">
+            <hr>
+            @if ($blog->comments->count() === 0)
+                <span>Belum ada komentar, tuliskan komentar anda disini</span>
+            @else
+                @foreach ($blog->comments as $comment)
+                    <p>{{ $comment->comment_text }}</p>
+                @endforeach
+            @endif 
+        </div>
     </div> 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
