@@ -18,7 +18,16 @@
                     <strong>Judul:</strong> {{ $blog->title }}
                 </div>
                 <div class="card-body">
-                    <strong>Deskripsi:</strong> {!! $blog->description !!}
+                    <strong>Deskripsi:</strong> {!! $blog->description !!} <br><br>
+
+                    Daftar Tags: <br>
+                    @if ($blog->tags->count() == null)
+                        - 
+                    @else
+                    @foreach ($blog->tags as $tag)
+                        <a href="">#{{ $tag->name }}</a>
+                    @endforeach
+                    @endif
                 </div>
                 <div class="card-footer d-flex justify-content-between">
                     <span>{{ $blog->created_at }}</span>

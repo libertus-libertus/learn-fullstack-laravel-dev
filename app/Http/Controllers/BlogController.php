@@ -60,7 +60,8 @@ class BlogController extends Controller
     */
     public function show($id) 
     {
-        $blog = Blog::with("comments")->findOrFail($id);
+        $blog = Blog::with(["comments", "tags"])->findOrFail($id);
+        // return $blog;
         if (!$blog) {
             abort(404);
         }
