@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -15,8 +15,9 @@ class BlogController extends Controller
     public function index(Request $request)
     {
         $cari = $request->cari;
-        $blogs = DB::table("blogs")
-            ->where("title", "LIKE", "%".$cari."%")
+        $blogs = Blog::where("title", "LIKE", "%".$cari."%")
+            ->withTrashed()
+            ->orderBy("id", "DESC")
             ->paginate(5);
         return view("blog.index", compact("blogs", "cari"));
     }
@@ -44,7 +45,7 @@ class BlogController extends Controller
 
         $title = $request->title;
 
-        DB::table("blogs")->insert([
+        Blog::create([
             "title" => $title,
             "slug" => Str::slug($title),
             "description" => $request->description
@@ -59,7 +60,7 @@ class BlogController extends Controller
     */
     public function show($id) 
     {
-        $blog = DB::table("blogs")->where("id", $id)->first();
+        $blog = Blog::findOrFail($id);
         if (!$blog) {
             abort(404);
         }
@@ -71,7 +72,7 @@ class BlogController extends Controller
     */
     public function edit($id)
     {
-        $blog = DB::table("blogs")->where("id", $id)->first();
+        $blog = Blog::findOrFail($id);
         if (!$blog) {
             abort(404);
         }
@@ -91,8 +92,10 @@ class BlogController extends Controller
             "description.required" => "Deskripsi tidak boleh kosong"
         ]);
 
+        $blog = Blog::findOrFail($id);
+
         $title = $request->title;
-        DB::table("blogs")->where("id", $id)->update([
+        $blog->update([
             "title" => $title,
             "slug" => Str::slug($title),
             "description" => $request->description
@@ -107,9 +110,19 @@ class BlogController extends Controller
     */   
     public function destroy($id) 
     {
-        $blog = DB::table("blogs")->where("id", $id)->delete();
+        $blog = Blog::findOrFail($id);
+        $blog->delete();
 
         Session::flash("success", "Berita berhasil dihapus!");
         return redirect()->route("blog.index", compact("blog"));
+    }
+
+    public function restore($id)
+    {
+        $blog = Blog::withTrashed()->findOrFail($id);
+        $blog->restore();
+
+        Session::flash("success", "Berita berhasil direstore!");
+        return redirect()->back();
     }
 }
