@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -26,8 +27,9 @@ class BlogController extends Controller
      * Menampilkan form create
     */
     public function create()
-    { 
-        return view("blog.create");
+    {
+        $tags = Tag::all(); 
+        return view("blog.create", compact("tags"));
     }
 
     /**
@@ -45,11 +47,12 @@ class BlogController extends Controller
 
         $title = $request->title;
 
-        Blog::create([
+        $blog = Blog::create([
             "title" => $title,
             "slug" => Str::slug($title),
             "description" => $request->description
         ]);
+        $blog->tags()->attach($request->tags);
 
         Session::flash("success", "Berita berhasil disimpan!");
         return redirect()->route("blog.index");
@@ -61,7 +64,6 @@ class BlogController extends Controller
     public function show($id) 
     {
         $blog = Blog::with(["comments", "tags"])->findOrFail($id);
-        // return $blog;
         if (!$blog) {
             abort(404);
         }

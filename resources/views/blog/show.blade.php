@@ -25,7 +25,7 @@
                         - 
                     @else
                     @foreach ($blog->tags as $tag)
-                        <a href="">#{{ $tag->name }}</a>
+                        <a href="" class="btn btn-outline-secondary btn-sm">#{{ $tag->name }}</a>
                     @endforeach
                     @endif
                 </div>

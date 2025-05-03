@@ -30,6 +30,14 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="form-group mb-3">
+                    @foreach ($tags as $key => $tag)
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="tags[]" id="tag{{ $key }}" value="{{ $tag->id }}">
+                            <label for="tag{{ $key }}" class="form-check-label">{{ $tag->name }}</label>
+                        </div>
+                    @endforeach 
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-sm">Simpan Berita</button>
                     <a href="{{ route('blog.index') }}" class="btn btn-secondary btn-sm">
