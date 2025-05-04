@@ -45,7 +45,7 @@ class BlogController extends Controller
             "description.required" => "Deskripsi tidak boleh kosong",
         ]);
 
-        $title = $request->title;
+        $title = $request->title; // 365Scores
 
         $blog = Blog::create([
             "title" => $title,
@@ -75,11 +75,12 @@ class BlogController extends Controller
     */
     public function edit($id)
     {
-        $blog = Blog::findOrFail($id);
+        $tags = Tag::all();
+        $blog = Blog::with(["tags"])->findOrFail($id);
         if (!$blog) {
             abort(404);
         }
-        return view("blog.edit", compact("blog"));
+        return view("blog.edit", compact("blog", "tags"));
     }
 
     /**
@@ -96,6 +97,9 @@ class BlogController extends Controller
         ]);
 
         $blog = Blog::findOrFail($id);
+
+        // Update tags
+        $blog->tags()->sync($request->tags);
 
         $title = $request->title;
         $blog->update([
