@@ -10,23 +10,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/**
- * Route::resource:
- * 
- * GET
- * POST
- * PUT/PACTH
- * UPDATE
- * DESTROY
-*/ 
-
 Route::middleware("auth")->group(function () {
-    Route::get("user", [UserController::class, "index"])->name("user.index");
-    
-    Route::resource("blog", BlogController::class);
-    Route::get("blog/{blog}/restore", [BlogController::class, "restore"])->name("blog.restore");
-    Route::post("comment/{blog_id}", [CommentController::class, "store"])->name("comment.store");
+    Route::get("user", [UserController::class, "index"])->name("user.index")->middleware("tokenvalid");
 
+    Route::prefix("blog")->group(function () {
+        Route::get("/", [BlogController::class, "index"])->name("blog.index")->middleware("tokenvalid2");
+        Route::get("/create", [BlogController::class, "create"])->name("blog.create");
+        Route::post("/", [BlogController::class, "store"])->name("blog.store");
+        Route::get("/{blog}", [BlogController::class, "show"])->name("blog.show");
+        Route::get("/{blog}/edit", [BlogController::class, "edit"])->name("blog.edit");
+        Route::patch("/{blog}", [BlogController::class, "update"])->name("blog.update");
+        Route::delete("/{blog}", [BlogController::class, "destroy"])->name("blog.destroy");
+        Route::get("/{blog}/restore", [BlogController::class, "restore"])->name("blog.restore");
+    });
+
+    Route::post("comment/{blog_id}", [CommentController::class, "store"])->name("comment.store");
     #logout
     Route::get("logout", [AuthController::class, "logout"])->name("logout");
 });
