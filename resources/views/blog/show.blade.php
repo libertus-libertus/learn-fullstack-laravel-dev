@@ -18,13 +18,42 @@
                     <strong>Judul:</strong> {{ $blog->title }}
                 </div>
                 <div class="card-body">
-                    <strong>Deskripsi:</strong> {!! $blog->description !!}
+                    <strong>Deskripsi:</strong> {!! $blog->description !!} <br><br>
+
+                    Daftar Tags: <br>
+                    @if ($blog->tags->count() == null)
+                        - 
+                    @else
+                    @foreach ($blog->tags as $tag)
+                        <a href="" class="btn btn-outline-secondary btn-sm">#{{ $tag->name }}</a>
+                    @endforeach
+                    @endif
                 </div>
                 <div class="card-footer d-flex justify-content-between">
                     <span>{{ $blog->created_at }}</span>
                     <span>By Admin</span>
                 </div>
             </div>
+        </div>
+        <div class="mt-3">
+            <h5>Comments:</h5>
+            <form action="{{ route("comment.store", $blog->id) }}" method="post">
+                @csrf
+                <textarea class="form-control" name="comment_text" cols="30" rows="5" placeholder="Silahkan tinggal komentar Anda disini" style="resize: none"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm mt-2">Submit</button>
+            </form>
+        </div>
+
+        {{-- show-komentar --}}
+        <div class="mt-3">
+            <hr>
+            @if ($blog->comments->count() === 0)
+                <span>Belum ada komentar, tuliskan komentar anda disini</span>
+            @else
+                @foreach ($blog->comments as $comment)
+                    <p>{{ $comment->comment_text }}</p>
+                @endforeach
+            @endif 
         </div>
     </div> 
 

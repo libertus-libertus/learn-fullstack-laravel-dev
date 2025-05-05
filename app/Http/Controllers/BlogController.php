@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -26,8 +27,9 @@ class BlogController extends Controller
      * Menampilkan form create
     */
     public function create()
-    { 
-        return view("blog.create");
+    {
+        $tags = Tag::all(); 
+        return view("blog.create", compact("tags"));
     }
 
     /**
@@ -43,13 +45,14 @@ class BlogController extends Controller
             "description.required" => "Deskripsi tidak boleh kosong",
         ]);
 
-        $title = $request->title;
+        $title = $request->title; // 365Scores
 
-        Blog::create([
+        $blog = Blog::create([
             "title" => $title,
             "slug" => Str::slug($title),
             "description" => $request->description
         ]);
+        $blog->tags()->attach($request->tags);
 
         Session::flash("success", "Berita berhasil disimpan!");
         return redirect()->route("blog.index");
@@ -60,7 +63,7 @@ class BlogController extends Controller
     */
     public function show($id) 
     {
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::with(["comments", "tags"])->findOrFail($id);
         if (!$blog) {
             abort(404);
         }
@@ -72,11 +75,12 @@ class BlogController extends Controller
     */
     public function edit($id)
     {
-        $blog = Blog::findOrFail($id);
+        $tags = Tag::all();
+        $blog = Blog::with(["tags"])->findOrFail($id);
         if (!$blog) {
             abort(404);
         }
-        return view("blog.edit", compact("blog"));
+        return view("blog.edit", compact("blog", "tags"));
     }
 
     /**
@@ -93,6 +97,9 @@ class BlogController extends Controller
         ]);
 
         $blog = Blog::findOrFail($id);
+
+        // Update tags
+        $blog->tags()->sync($request->tags);
 
         $title = $request->title;
         $blog->update([
